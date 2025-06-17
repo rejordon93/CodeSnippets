@@ -1,0 +1,97 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum FriendStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+  BLOCKED
+}
+
+model User {
+  id               Int       @id @default(autoincrement())
+  username         String    @unique
+  email            String    @unique
+  password         String
+  isOnline Boolean @default(false)
+  posts            Post[]
+  comments         Comment[]
+  createdAt        DateTime  @default(now())
+  profile          Profile?
+  requestedFriends Friend[]  @relation("Requester")
+  likes            Like[]    // Added opposite relation field for Like model
+  receivedFriends  Friend[]  @relation("Recipient")
+}
+
+model Profile {
+  id         Int      @id @default(autoincrement())
+  userId     Int      @unique
+  firstname  String
+  lastname   String
+  state      String
+  city       String
+  zip        String
+  university String
+  updatedAt  DateTime @default(now())
+  user       User     @relation(fields: [userId], references: [id])
+}
+
+model Friend {
+  id            Int          @id @default(autoincrement())
+  requesterId   Int
+  recipientId   Int
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+  status        FriendStatus @default(PENDING)
+
+  requester     User         @relation("Requester", fields: [requesterId], references: [id])
+  recipient     User         @relation("Recipient", fields: [recipientId], references: [id])
+
+  @@index([requesterId])
+  @@index([recipientId])
+}
+
+model Post {
+  id        Int       @id @default(autoincrement())
+  title     String
+  content   String
+  tags      String[]
+  author    User      @relation(fields: [authorId], references: [id])
+  authorId  Int
+  comments  Comment[]
+  likes     Like[]    // Added opposite relation field
+  createdAt DateTime  @default(now())
+}
+
+model Comment {
+  id        Int      @id @default(autoincrement())
+  comment   String
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
+  post      Post     @relation(fields: [postId], references: [id])
+  postId    Int
+  createdAt DateTime @default(now())
+  likes     Like[]   // Added opposite relation field
+}
+model Like {
+  id         Int      @id @default(autoincrement())
+  user       User     @relation(fields: [userId], references: [id])
+  userId     Int
+  post       Post?    @relation(fields: [postId], references: [id])
+  postId     Int?
+  comment    Comment? @relation(fields: [commentId], references: [id])
+  commentId  Int?
+
+  @@unique([userId, postId, commentId])
+}
+
+
+
+
+
