@@ -26,9 +26,12 @@ export async function GET(req: NextRequest) {
     const posts = await prisma.post.findMany({
       where: { authorId: user.id },
       include: { author: true },
+      orderBy: {
+        createdAt: "desc",
+      },
     });
 
-    return NextResponse.json({ user: profile, blogs: posts });
+    return NextResponse.json({ user: profile, snippets: posts });
   } catch (err) {
     console.error(err);
     return NextResponse.json({ message: "Server Error" }, { status: 500 });

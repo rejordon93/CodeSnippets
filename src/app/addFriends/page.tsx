@@ -2,6 +2,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
+import img from "../../../public/addFriend.jpg";
 
 type User = {
   id: number;
@@ -53,39 +55,55 @@ export default function AddFriends() {
   );
 
   return (
-    <div className="min-h-screen flex flex-col items-center bg-gradient-to-br from-blue-50 to-white px-4 py-16">
-      <h1 className="text-4xl md:text-5xl font-extrabold text-blue-700 mb-8 tracking-tight text-center">
-        🔍 Friend Finder
-      </h1>
+    <div className="min-h-screen flex flex-col items-center bg-gradient-to-br from-blue-50 to-white px-6 py-20 w-full">
+      {/* Top Section: Text Left, Image Right */}
+      <div className="w-full flex flex-col md:flex-row items-center md:items-start gap-16 mb-16 px-6">
+        {/* Left Text */}
+        <div className="md:w-1/2 text-left px-4 md:px-0">
+          <h1 className="text-5xl font-extrabold text-blue-700 mb-6 tracking-tight leading-tight">
+            🔍 Friend Finder
+          </h1>
+          <h2 className="text-2xl font-semibold text-gray-700 mb-6 leading-relaxed">
+            Search for friends — just start typing a name to find and connect
+            with awesome people around you.
+          </h2>
+          <p className="text-gray-600 mb-10 text-lg leading-relaxed">
+            Easily browse all users and send friend requests with one click.
+            Build your network, stay connected, and share your journey!
+          </p>
+        </div>
+
+        {/* Right Image */}
+        <div className="relative md:w-1/2 w-full h-[420px] rounded-xl overflow-hidden shadow-lg ring-1 ring-blue-200">
+          <Image
+            src={img}
+            alt="Add Friends Illustration"
+            fill
+            className="object-cover"
+            priority
+          />
+        </div>
+      </div>
 
       {/* Back & Search */}
-      <form
-        className="w-full max-w-2xl mb-10"
-        onSubmit={(e) => e.preventDefault()}
-      >
-        <div className="flex flex-col md:flex-row items-center gap-4">
-          <button
-            onClick={() => router.back()}
-            type="button"
-            className="text-blue-600 border border-blue-600 rounded-md px-4 py-2 text-sm font-semibold hover:bg-blue-600 hover:text-white transition duration-200 w-full md:w-auto"
-          >
-            ← Back
-          </button>
-
-          <div className="relative w-full">
+      <form className="px-6 w-3xl mb-14" onSubmit={(e) => e.preventDefault()}>
+        <div className="flex items-center justify-between gap-5">
+          {/* Search Input */}
+          <div className="relative flex-grow">
+            {" "}
+            {/* flex-grow allows input to expand */}
             <input
               type="search"
               id="search"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full p-4 ps-12 text-base text-gray-800 border border-gray-300 rounded-xl shadow-md bg-white focus:ring-2 focus:ring-blue-400 focus:outline-none"
+              className="w-full p-4 pl-14 text-base text-gray-900 border border-gray-300 rounded-2xl shadow-md bg-white focus:ring-4 focus:ring-blue-400 focus:outline-none transition"
               placeholder="Search for a friend..."
               autoComplete="off"
             />
-
-            <div className="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
+            <div className="absolute inset-y-0 left-0 flex items-center pl-5 pointer-events-none">
               <svg
-                className="w-5 h-5 text-gray-400"
+                className="w-6 h-6 text-gray-400"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -99,31 +117,41 @@ export default function AddFriends() {
               </svg>
             </div>
           </div>
+
+          {/* Back Button on Right */}
+          <button
+            onClick={() => router.back()}
+            type="button"
+            className="px-6 py-3 text-blue-700 font-semibold rounded-2xl hover:bg-blue-100 focus:ring-2 focus:ring-blue-300 transition whitespace-nowrap"
+            style={{ flexShrink: 0 }} // prevent shrinking if needed
+          >
+            Back
+          </button>
         </div>
       </form>
 
       {/* Success Message */}
       {successMessage && (
-        <div className="mb-6 text-green-600 text-lg font-medium animate-pulse">
+        <div className="mb-10 text-green-600 text-xl font-semibold animate-pulse select-none px-6">
           {successMessage}
         </div>
       )}
 
       {/* User List */}
       {searchTerm.trim() !== "" && filteredUsers.length > 0 && (
-        <div className="w-full max-w-2xl bg-white rounded-2xl shadow-xl border border-gray-100 divide-y divide-gray-200">
+        <div className=" w-3xl bg-white rounded-3xl shadow-xl border border-gray-200 divide-y divide-gray-200 px-6">
           {filteredUsers.map((user) => (
             <div
               key={user.id}
-              className="flex justify-between items-center px-6 py-4 hover:bg-blue-50 transition-all"
+              className="flex justify-between items-center px-6 py-5 hover:bg-blue-50 transition-all cursor-pointer"
             >
-              <div className="text-gray-900 font-medium text-lg">
+              <div className="text-gray-900 font-semibold text-lg select-text">
                 {user.username}
               </div>
               <button
                 onClick={() => handleAddFriend(user.id)}
                 type="button"
-                className="bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold py-2 px-5 rounded-lg transition duration-200"
+                className="bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold py-2 px-6 rounded-2xl shadow-md transition duration-200"
               >
                 Add Friend
               </button>
@@ -134,7 +162,9 @@ export default function AddFriends() {
 
       {/* No Results */}
       {searchTerm.trim() !== "" && filteredUsers.length === 0 && (
-        <p className="text-gray-500 mt-6 text-lg">No users found.</p>
+        <p className="text-gray-500 mt-8 text-lg select-none px-6">
+          No users found.
+        </p>
       )}
     </div>
   );

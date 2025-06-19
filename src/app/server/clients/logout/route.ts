@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/database/prisma";
-import { getDataFromToken } from "@/helpers/getDataFromToken";
+import { getToken } from "@/helpers/getDataFromToken";
 
 export async function DELETE(req: NextRequest) {
   try {
-    const userToken = getDataFromToken(req);
+    const userToken = getToken(req);
 
     // Validate the token
     if (!userToken) {

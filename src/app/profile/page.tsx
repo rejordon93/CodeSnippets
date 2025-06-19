@@ -73,6 +73,11 @@ export default function Profile() {
     fetchAcceptedFriends();
   }, []);
 
+  const handleLogout = async () => {
+    const res = axios.delete("/server/clients/logout");
+    router.push("/");
+  };
+
   const navigateTo = (path: string) => {
     router.push(path);
   };
@@ -132,10 +137,30 @@ export default function Profile() {
               <div className="absolute bottom-0 left-0 w-full px-8 pb-8">
                 <div className="flex justify-start max-w-4xl mx-auto gap-4">
                   <button
-                    onClick={() => navigateTo("/blog")}
+                    onClick={() => navigateTo("/snippet")}
                     className="mt-6 px-6 py-3 bg-blue-600 text-white text-lg rounded-lg shadow hover:bg-blue-700 transition-transform transform hover:scale-105"
                   >
-                    Start Blogging
+                    Add Snippets
+                  </button>
+                  <button
+                    onClick={handleLogout}
+                    className="mt-6 px-6 py-3 bg-red-500 text-white text-lg rounded-lg shadow hover:bg-red-600 hover:shadow-md transition-transform transform hover:scale-105 flex items-center gap-2"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-5 w-5"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth={2}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1m0-11V4m0 4h-1"
+                      />
+                    </svg>
+                    Logout
                   </button>
 
                   {/* Single Friend Requests Button */}

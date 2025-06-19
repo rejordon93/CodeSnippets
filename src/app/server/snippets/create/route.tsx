@@ -2,14 +2,14 @@ import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/database/prisma";
 import { getToken } from "@/helpers/getDataFromToken";
 
-type blogType = {
+type snippetType = {
   title: string;
   content: string;
   tags: string[];
 };
 
 export async function POST(req: NextRequest) {
-  const body: blogType = await req.json();
+  const body: snippetType = await req.json();
   const { title, content, tags } = body;
 
   const userId = await getToken(req);
@@ -18,7 +18,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
   }
   try {
-    const blog = await prisma.post.create({
+    const snippet = await prisma.post.create({
       data: {
         title,
         content,
@@ -29,7 +29,7 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    return NextResponse.json(blog, { status: 201 });
+    return NextResponse.json(snippet, { status: 201 });
   } catch (error) {
     console.error("Blog creation error:", error);
     return NextResponse.json(

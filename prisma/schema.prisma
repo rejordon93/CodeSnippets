@@ -24,8 +24,7 @@ model User {
   comments         Comment[]
   createdAt        DateTime  @default(now())
   profile          Profile?
-  requestedFriends Friend[]  @relation("Requester")
-  likes            Like[]    // Added opposite relation field for Like model
+  requestedFriends Friend[]  @relation("Requester")   // Added opposite relation field for Like model
   receivedFriends  Friend[]  @relation("Recipient")
 }
 
@@ -64,8 +63,7 @@ model Post {
   tags      String[]
   author    User      @relation(fields: [authorId], references: [id])
   authorId  Int
-  comments  Comment[]
-  likes     Like[]    // Added opposite relation field
+  comments  Comment[]   // Added opposite relation field
   createdAt DateTime  @default(now())
 }
 
@@ -77,18 +75,6 @@ model Comment {
   post      Post     @relation(fields: [postId], references: [id])
   postId    Int
   createdAt DateTime @default(now())
-  likes     Like[]   // Added opposite relation field
-}
-model Like {
-  id         Int      @id @default(autoincrement())
-  user       User     @relation(fields: [userId], references: [id])
-  userId     Int
-  post       Post?    @relation(fields: [postId], references: [id])
-  postId     Int?
-  comment    Comment? @relation(fields: [commentId], references: [id])
-  commentId  Int?
-
-  @@unique([userId, postId, commentId])
 }
 
 
